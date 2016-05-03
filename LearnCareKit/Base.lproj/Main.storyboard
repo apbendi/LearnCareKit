@@ -16,7 +16,29 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J30-2C-Wbr">
+                                <rect key="frame" x="284" y="269" width="33" height="30"/>
+                                <state key="normal" title="Care"/>
+                                <connections>
+                                    <action selector="didPressCare:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n7b-ya-X3A"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B1m-jP-hPH">
+                                <rect key="frame" x="281" y="315" width="39" height="30"/>
+                                <state key="normal" title="Track"/>
+                                <connections>
+                                    <action selector="didPressTrack:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hCB-pH-ua7"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="J30-2C-Wbr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3fS-yt-H9l"/>
+                            <constraint firstItem="J30-2C-Wbr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-16" id="AVH-6B-ZoA"/>
+                            <constraint firstItem="B1m-jP-hPH" firstAttribute="top" secondItem="J30-2C-Wbr" secondAttribute="bottom" constant="16" id="S6l-8e-6FZ"/>
+                            <constraint firstItem="B1m-jP-hPH" firstAttribute="centerX" secondItem="J30-2C-Wbr" secondAttribute="centerX" id="dFm-aL-Drm"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

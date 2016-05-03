@@ -15,6 +15,8 @@ class ViewController: UIViewController {
         return persistenceDirectoryURL
     }()
 
+    private var store: OCKCarePlanStore? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -22,7 +24,7 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        let store = OCKCarePlanStore(persistenceDirectoryURL: storeDirectory)
+        store = OCKCarePlanStore(persistenceDirectoryURL: storeDirectory)
 
         let components = NSCalendar.currentCalendar().componentsInTimeZone(NSTimeZone.defaultTimeZone(), fromDate: NSDate())
         let schedule = OCKCareSchedule.dailyScheduleWithStartDate(components, occurrencesPerDay: 1)
@@ -36,19 +38,53 @@ class ViewController: UIViewController {
                                                                       imageURL: nil,
                                                                       schedule: schedule,
                                                                       userInfo: nil)
-        store.addActivity(intActivity) { (didAdd, error) in
+        store?.addActivity(intActivity) { (didAdd, error) in
             if didAdd {
                 print("Added intervention activity")
             } else if let error = error {
-                print("Error adding activity: \(error.localizedDescription)")
+                print("Error adding intervention activity: \(error.localizedDescription)")
             } else {
                 print("Did not at intervention activity")
             }
         }
 
+        let asActivity = OCKCarePlanActivity.assessmentWithIdentifier("AssessmentActivity",
+                                                                      groupIdentifier: nil,
+                                                                      title: "First Assessment",
+                                                                      text: nil,
+                                                                      tintColor: nil,
+                                                                      resultResettable: true,
+                                                                      schedule: schedule,
+                                                                      userInfo: nil)
+        store?.addActivity(asActivity) { (didAdd, error) in
+            if didAdd {
+                print("Added assessment activity")
+            } else if let error = error {
+                print("Error adding assessment activity: \(error.localizedDescription)")
+            } else {
+                print("Did not at assessment activity")
+            }
+        }
+    }
+
+    // MARK: Target-Action
+
+    @IBAction func didPressCare(sender: UIButton) {
+        guard let store = store else {
+            return
+        }
 
         let careVC = OCKCareCardViewController(carePlanStore: store)
-
         presentViewController(careVC, animated: true, completion: nil)
     }
+
+    @IBAction func didPressTrack(sender: UIButton) {
+        guard let store = store else {
+            return
+        }
+
+        let trackVC = OCKSymptomTrackerViewController(carePlanStore: store)
+        presentViewController(trackVC, animated: true, completion: nil)
+    }
 }
+
