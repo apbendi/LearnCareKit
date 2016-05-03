@@ -1,0 +1,2 @@
+github "ResearchKit/ResearchKit" "stable"
+github "carekit-apple/CareKit"

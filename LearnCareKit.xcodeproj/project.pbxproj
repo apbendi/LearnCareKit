@@ -14,6 +14,8 @@
 		B44628EC1CD9142B0039F886 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B44628EA1CD9142B0039F886 /* LaunchScreen.storyboard */; };
 		B44628F71CD9142B0039F886 /* LearnCareKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44628F61CD9142B0039F886 /* LearnCareKitTests.swift */; };
 		B44629021CD9142B0039F886 /* LearnCareKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44629011CD9142B0039F886 /* LearnCareKitUITests.swift */; };
+		B44629101CD9185B0039F886 /* CareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B446290F1CD9185B0039F886 /* CareKit.framework */; };
+		B44629121CD9185E0039F886 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B44629111CD9185E0039F886 /* ResearchKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		B44628FD1CD9142B0039F886 /* LearnCareKitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LearnCareKitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B44629011CD9142B0039F886 /* LearnCareKitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnCareKitUITests.swift; sourceTree = "<group>"; };
 		B44629031CD9142B0039F886 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B446290F1CD9185B0039F886 /* CareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CareKit.framework; path = Carthage/Build/iOS/CareKit.framework; sourceTree = "<group>"; };
+		B44629111CD9185E0039F886 /* ResearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ResearchKit.framework; path = Carthage/Build/iOS/ResearchKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B44629101CD9185B0039F886 /* CareKit.framework in Frameworks */,
+				B44629121CD9185E0039F886 /* ResearchKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +83,8 @@
 		B44628D51CD9142A0039F886 = {
 			isa = PBXGroup;
 			children = (
+				B44629111CD9185E0039F886 /* ResearchKit.framework */,
+				B446290F1CD9185B0039F886 /* CareKit.framework */,
 				B44628E01CD9142A0039F886 /* LearnCareKit */,
 				B44628F51CD9142B0039F886 /* LearnCareKitTests */,
 				B44629001CD9142B0039F886 /* LearnCareKitUITests */,
@@ -135,6 +143,7 @@
 				B44628DA1CD9142A0039F886 /* Sources */,
 				B44628DB1CD9142A0039F886 /* Frameworks */,
 				B44628DC1CD9142A0039F886 /* Resources */,
+				B44629131CD918990039F886 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -250,6 +259,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B44629131CD918990039F886 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/CareKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ResearchKit.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B44628DA1CD9142A0039F886 /* Sources */ = {
@@ -399,6 +426,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = LearnCareKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.scopelift.LearnCareKit;
@@ -410,6 +441,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = LearnCareKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.scopelift.LearnCareKit;
