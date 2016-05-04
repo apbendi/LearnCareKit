@@ -46,7 +46,7 @@ class ViewController: UIViewController {
             }
         }
 
-        let asActivity = OCKCarePlanActivity.assessmentWithIdentifier("AssessmentActivity",
+        let firstActivity = OCKCarePlanActivity.assessmentWithIdentifier("FirstAssessmentActivity",
                                                                       groupIdentifier: nil,
                                                                       title: "First Assessment",
                                                                       text: nil,
@@ -54,19 +54,33 @@ class ViewController: UIViewController {
                                                                       resultResettable: true,
                                                                       schedule: schedule,
                                                                       userInfo: nil)
-        store.addActivity(asActivity) { (didAdd, error) in
-            if didAdd {
-                print("Added assessment activity")
-            } else if let error = error {
-                print("Error adding assessment activity: \(error.localizedDescription)")
-            } else {
-                print("Did not at assessment activity")
+
+        let secondActivity = OCKCarePlanActivity.assessmentWithIdentifier("SecondAssessmentActivity",
+                                                                      groupIdentifier: nil,
+                                                                      title: "Second Assessment",
+                                                                      text: nil,
+                                                                      tintColor: nil,
+                                                                      resultResettable: true,
+                                                                      schedule: schedule,
+                                                                      userInfo: nil)
+
+        [firstActivity, secondActivity].forEach { asActivity in
+            store.addActivity(asActivity) { (didAdd, error) in
+                if didAdd {
+                    print("Added assessment \(asActivity)")
+                } else if let error = error {
+                    print("Error adding assessment activity: \(error.localizedDescription)")
+                } else {
+                    print("Did not at assessment activity")
+                }
             }
         }
     }
+}
 
-    // MARK: Target-Action
+// MARK: Target-Action
 
+private extension ViewController {
     @IBAction func didPressCare(sender: UIButton) {
         let careVC = OCKCareCardViewController(carePlanStore: store)
         showViewController(careVC, sender: self)
@@ -74,7 +88,16 @@ class ViewController: UIViewController {
 
     @IBAction func didPressTrack(sender: UIButton) {
         let trackVC = OCKSymptomTrackerViewController(carePlanStore: store)
+        trackVC.delegate = self
         showViewController(trackVC, sender: self)
+    }
+}
+
+// MARK: OCKSymptomTrackerViewControllerDelegate
+
+extension ViewController: OCKSymptomTrackerViewControllerDelegate {
+    func symptomTrackerViewController(viewController: OCKSymptomTrackerViewController, didSelectRowWithAssessmentEvent assessmentEvent: OCKCarePlanEvent) {
+        print("Selected: \(assessmentEvent)")
     }
 }
 
