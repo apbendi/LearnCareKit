@@ -75,7 +75,7 @@ class ViewController: UIViewController {
         }
 
         let careVC = OCKCareCardViewController(carePlanStore: store)
-        presentViewController(careVC, animated: true, completion: nil)
+        showViewController(careVC, sender: self)
     }
 
     @IBAction func didPressTrack(sender: UIButton) {
@@ -84,7 +84,7 @@ class ViewController: UIViewController {
         }
 
         let trackVC = OCKSymptomTrackerViewController(carePlanStore: store)
-        presentViewController(trackVC, animated: true, completion: nil)
+        showViewController(trackVC, sender: self)
     }
 }
 
