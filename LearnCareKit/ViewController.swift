@@ -1,5 +1,6 @@
 import UIKit
 import CareKit
+import ResearchKit
 
 class ViewController: UIViewController {
 
@@ -98,6 +99,36 @@ private extension ViewController {
 extension ViewController: OCKSymptomTrackerViewControllerDelegate {
     func symptomTrackerViewController(viewController: OCKSymptomTrackerViewController, didSelectRowWithAssessmentEvent assessmentEvent: OCKCarePlanEvent) {
         print("Selected: \(assessmentEvent)")
+
+        guard assessmentEvent.isAvailable, let task = taskFor(assessmentEvent: assessmentEvent) else {
+            return
+        }
+
+        let taskVC = ORKTaskViewController(task: task, taskRunUUID: nil)
+        presentViewController(taskVC, animated: true, completion: nil)
+    }
+}
+
+// MARK: Task Generators
+
+private extension ViewController {
+    func taskFor(assessmentEvent event: OCKCarePlanEvent) -> ORKTask? {
+        switch event.activity.identifier {
+        case "FirstAssessmentActivity":
+            let answer = ORKNumericAnswerFormat(style: .Decimal, unit: "lbs", minimum: 60, maximum: 500)
+            let question = ORKQuestionStep(identifier: "FistAssessmentWeightQuestion", title: "What is your weight today?", answer: answer)
+            return ORKOrderedTask(identifier: "FirstAssessmentTask", steps: [question])
+        default:
+            return nil
+        }
+    }
+}
+
+extension OCKCarePlanEvent {
+    var isAvailable: Bool {
+        return state == .Initial ||
+                state == .NotCompleted ||
+                (state == .Completed && activity.resultResettable)
     }
 }
 
