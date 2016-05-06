@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     }
 
     private let store: OCKCarePlanStore = OCKCarePlanStore(persistenceDirectoryURL: storeDirectory)
+    private var trackViewController: OCKSymptomTrackerViewController? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,9 +89,14 @@ private extension ViewController {
     }
 
     @IBAction func didPressTrack(sender: UIButton) {
-        let trackVC = OCKSymptomTrackerViewController(carePlanStore: store)
-        trackVC.delegate = self
-        showViewController(trackVC, sender: self)
+        guard let trackViewController = trackViewController else {
+            self.trackViewController = OCKSymptomTrackerViewController(carePlanStore: store)
+            self.trackViewController?.delegate = self
+            didPressTrack(sender)
+            return
+        }
+
+        showViewController(trackViewController, sender: self)
     }
 }
 
@@ -105,6 +111,7 @@ extension ViewController: OCKSymptomTrackerViewControllerDelegate {
         }
 
         let taskVC = ORKTaskViewController(task: task, taskRunUUID: nil)
+        taskVC.delegate = self
         presentViewController(taskVC, animated: true, completion: nil)
     }
 }
@@ -122,6 +129,25 @@ private extension ViewController {
             return nil
         }
     }
+}
+
+// MARK: ORKTaskViewControllerDelegate
+
+extension ViewController: ORKTaskViewControllerDelegate {
+
+    func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+        defer {
+            dismissViewControllerAnimated(true, completion: nil)
+        }
+
+        guard nil == error, case .Completed = reason,
+            let event = trackViewController?.lastSelectedAssessmentEvent else {
+            return
+        }
+
+        print("Returned from \(event.activity.identifier)")
+    }
+
 }
 
 extension OCKCarePlanEvent {
