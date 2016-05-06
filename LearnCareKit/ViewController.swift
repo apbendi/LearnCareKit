@@ -83,6 +83,7 @@ class ViewController: UIViewController {
 // MARK: Target-Action
 
 private extension ViewController {
+
     @IBAction func didPressCare(sender: UIButton) {
         let careVC = OCKCareCardViewController(carePlanStore: store)
         showViewController(careVC, sender: self)
@@ -103,6 +104,7 @@ private extension ViewController {
 // MARK: OCKSymptomTrackerViewControllerDelegate
 
 extension ViewController: OCKSymptomTrackerViewControllerDelegate {
+
     func symptomTrackerViewController(viewController: OCKSymptomTrackerViewController, didSelectRowWithAssessmentEvent assessmentEvent: OCKCarePlanEvent) {
         print("Selected: \(assessmentEvent)")
 
@@ -119,6 +121,7 @@ extension ViewController: OCKSymptomTrackerViewControllerDelegate {
 // MARK: Task Generators
 
 private extension ViewController {
+
     func taskFor(assessmentEvent event: OCKCarePlanEvent) -> ORKTask? {
         switch event.activity.identifier {
         case "FirstAssessmentActivity":
@@ -141,13 +144,49 @@ extension ViewController: ORKTaskViewControllerDelegate {
         }
 
         guard nil == error, case .Completed = reason,
-            let event = trackViewController?.lastSelectedAssessmentEvent else {
+            let event = trackViewController?.lastSelectedAssessmentEvent,
+            let eventResult = carePlanResult(withIdentifier: event.activity.identifier, andResult: taskViewController.result) else {
             return
         }
 
-        print("Returned from \(event.activity.identifier)")
+        store.updateEvent(event, withResult: eventResult, state: event.state) { (success, event, error) in
+            guard success && nil == error, let event = event else {
+                if let error = error {
+                    print("Error updating event: \(error.localizedDescription)")
+                } else {
+                    print("Updating event was unsuccessful")
+                }
+
+                return
+            }
+
+            print("Successfully updated \(event.activity.identifier)")
+        }
+    }
+}
+
+// MARK: Event Result Generators
+
+private extension ViewController {
+
+    func carePlanResult(withIdentifier identifier: NSString, andResult result: ORKTaskResult) -> OCKCarePlanEventResult? {
+        switch identifier {
+        case "FirstAssessmentActivity":
+            return weightResult(withResult: result)
+        default:
+            return nil
+        }
     }
 
+    func weightResult(withResult result: ORKTaskResult) -> OCKCarePlanEventResult? {
+        guard let weightStep = result.firstResult as? ORKStepResult,
+            let weightQuestion = weightStep.firstResult as? ORKNumericQuestionResult,
+            let weight = weightQuestion.numericAnswer?.stringValue else {
+            return nil
+        }
+
+        return OCKCarePlanEventResult(valueString: weight, unitString: "lbs", userInfo: nil)
+    }
 }
 
 extension OCKCarePlanEvent {
